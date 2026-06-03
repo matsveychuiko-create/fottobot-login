@@ -38,7 +38,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 48px;
     padding: 48px;
     overflow: hidden;
     background: linear-gradient(135deg, #0d1225 0%, #0B1020 60%, #110d20 100%);
@@ -116,6 +117,7 @@
   .left-content {
     position: relative;
     z-index: 1;
+    margin-top: 8px;
   }
 
   .left-content .tagline {
@@ -165,8 +167,10 @@
     position: relative;
     z-index: 1;
     display: flex;
-    gap: 24px;
+    flex-wrap: wrap;
+    gap: 4px 0;
     align-items: center;
+    margin-top: auto;
   }
 
   .left-footer a {
@@ -174,9 +178,17 @@
     color: var(--muted);
     text-decoration: none;
     transition: color 0.2s;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    margin: 4px;
   }
 
-  .left-footer a:hover { color: var(--text); }
+  .left-footer a:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(123,97,255,0.08);
+  }
 
   /* RIGHT PANEL */
   .right-panel {
@@ -628,15 +640,13 @@
   @media (max-width: 768px) {
     body { flex-direction: column; overflow: auto; height: auto; }
     .left-panel { width: 100%; padding: 32px 28px 28px; min-height: auto; height: auto; }
+    .left-content { margin-top: 24px; }
     .left-content .tagline { font-size: 1.3rem; }
     .features-list { display: none; }
     .left-footer {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 16px;
-      margin-top: 20px;
+      margin-top: 24px;
     }
-    .left-footer a { font-size: 0.8rem; }
+    .left-footer a { font-size: 0.76rem; padding: 5px 10px; }
     .right-panel { width: 100%; padding: 32px 28px 48px; height: auto; overflow-y: visible; }
     .right-panel::before { display: none; }
     .stats-badge { display: none; }
@@ -683,7 +693,7 @@
   <div class="login-box">
 
     <h1>Добро пожаловать</h1>
-    <p class="subtitle">Войдите в аккаунт чтобы продолжить работу.</p>
+    <p class="subtitle" id="form-subtitle">Войдите в аккаунт чтобы продолжить работу.</p>
 
     <div class="tabs">
       <button class="tab active" onclick="setTab(this, 'login')">Вход</button>
@@ -869,6 +879,9 @@
     btn.classList.add('active');
     document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
     document.getElementById('register-form').style.display = type === 'register' ? 'block' : 'none';
+    document.getElementById('form-subtitle').textContent = type === 'login'
+      ? 'Войдите в аккаунт чтобы продолжить работу.'
+      : 'Регистрация только для фотографов. Заполните данные.';
   }
 
   function switchToRegister() {
@@ -877,6 +890,7 @@
     tabs[1].classList.add('active');
     document.getElementById('login-form').style.display = 'none';
     document.getElementById('register-form').style.display = 'block';
+    document.getElementById('form-subtitle').textContent = 'Регистрация только для фотографов. Заполните данные.';
   }
 
   function switchToLogin() {
@@ -885,6 +899,7 @@
     tabs[0].classList.add('active');
     document.getElementById('register-form').style.display = 'none';
     document.getElementById('login-form').style.display = 'block';
+    document.getElementById('form-subtitle').textContent = 'Войдите в аккаунт чтобы продолжить работу.';
   }
 
   function togglePwd(id, btn) {
