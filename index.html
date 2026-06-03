@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вход — Фотобот</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B1020;
+    --surface: #141829;
+    --surface2: #1c2236;
+    --border: #2a3050;
+    --accent: #7B61FF;
+    --accent2: #9f8fff;
+    --accent-glow: rgba(123, 97, 255, 0.3);
+    --text: #f0f0f8;
+    --muted: #7a7a9a;
+    --green: #4ade80;
+    --error: #ff6b6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 55%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0d1225 0%, #0B1020 60%, #110d20 100%);
+    height: 100vh;
+    flex-shrink: 0;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(123,97,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(123,97,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Grid pattern */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(123,97,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,97,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  .left-logo {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+  }
+
+  .logo-icon span {
+    display: block;
+    width: 6px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .logo-icon span:nth-child(1) { height: 16px; }
+  .logo-icon span:nth-child(2) { height: 22px; }
+  .logo-icon span:nth-child(3) { height: 28px; }
+
+  .logo-text {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+
+  .left-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .left-content .tagline {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .left-content .desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 420px;
+    margin-bottom: 40px;
+  }
+
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+
+  .feature-item .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  .left-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .left-footer a {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .left-footer a:hover { color: var(--text); }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    width: 45%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 40px;
+    background: var(--surface);
+    position: relative;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .right-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .login-box h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .login-box .subtitle {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 28px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 9px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 7px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .input-wrap input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .input-wrap input::placeholder {
+    color: #3a3a5a;
+  }
+
+  .input-wrap .eye-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+  }
+
+  .input-wrap .eye-btn:hover { color: var(--text); }
+
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    margin-top: -4px;
+  }
+
+  .checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .checkbox-wrap input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .checkbox-wrap span {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .forgot-link {
+    font-size: 0.8rem;
+    color: var(--accent2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .forgot-link:hover { color: var(--accent); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent2);
+    box-shadow: 0 8px 24px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .divider span {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .register-link {
+    text-align: center;
+    font-size: 0.83rem;
+    color: var(--muted);
+  }
+
+  .register-link a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .register-link a:hover { color: var(--accent); }
+
+  .form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .select-input {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.92rem;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a7a9a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .select-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .select-input option {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .phone-wrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .phone-prefix {
+    padding: 13px 12px 13px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-family: 'Montserrat', sans-serif;
+    white-space: nowrap;
+  }
+
+  .phone-input {
+    border-radius: 0 10px 10px 0 !important;
+    flex: 1;
+  }
+
+  .city-field {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 48px 10px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    cursor: text;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    min-height: 48px;
+  }
+
+  #city-tags {
+    display: contents;
+  }
+
+  .city-field:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .city-field.error {
+    border-color: #ff6b6b !important;
+    box-shadow: 0 0 0 3px rgba(255,107,107,0.15) !important;
+  }
+
+  .city-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    color: #fff;
+    font-weight: 500;
+    animation: fadeUp 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .city-tag .remove-city {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+  }
+
+  .city-tag .remove-city:hover { color: #fff; }
+
+  .city-text-input {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    color: var(--text) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 0.92rem !important;
+    padding: 0 !important;
+    min-width: 140px;
+    flex: 1;
+    box-shadow: none !important;
+  }
+
+  .city-text-input::placeholder { color: #3a3a5a; }
+
+  .city-add-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .city-add-btn:hover { background: var(--accent2); }
+
+  .support-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    transition: all 0.2s;
+  }
+
+  .support-link:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  /* Floating stats */
+  .stats-badge {
+    position: absolute;
+    bottom: 48px;
+    right: 40px;
+    display: flex;
+    gap: 16px;
+  }
+
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    text-align: center;
+  }
+
+  .stat-pill .num {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent2);
+    display: block;
+  }
+
+  .stat-pill .lbl {
+    font-size: 0.68rem;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-box { animation: fadeUp 0.5s ease forwards; }
+  .left-content { animation: fadeUp 0.6s ease 0.1s both; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    body { flex-direction: column; overflow: auto; height: auto; }
+    .left-panel { width: 100%; padding: 32px 28px 28px; min-height: auto; height: auto; }
+    .left-content .tagline { font-size: 1.3rem; }
+    .features-list { display: none; }
+    .left-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 20px;
+    }
+    .left-footer a { font-size: 0.8rem; }
+    .right-panel { width: 100%; padding: 32px 28px 48px; height: auto; overflow-y: visible; }
+    .right-panel::before { display: none; }
+    .stats-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="grid-bg"></div>
+
+  <a href="https://fottobot.io/" class="left-logo">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="36" height="32" viewBox="0 0 265 233">
+      <path d="M0 0 C0 73.26 0 146.52 0 222 C-6.201482 220.62189289 -12.03055491 219.13082052 -18.00805664 217.11083984 C-18.87150161 216.82314539 -19.73494658 216.53545094 -20.62455654 216.23903847 C-23.38784673 215.31720209 -26.14902715 214.3892241 -28.91015625 213.4609375 C-30.62840324 212.88671614 -32.34678663 212.31290278 -34.06530762 211.73950195 C-40.39935547 209.62293389 -46.73077279 207.4985002 -53.0625 205.375 C-67.231875 200.63125 -81.40125 195.8875 -96 191 C-96 138.2 -96 85.4 -96 31 C-80.716875 25.885 -65.43375 20.77 -49.6875 15.5 C-44.85955811 13.88158203 -40.03161621 12.26316406 -35.05737305 10.59570312 C-29.16760254 8.62792969 -29.16760254 8.62792969 -26.41145325 7.70837402 C-24.48353119 7.06419605 -22.55620489 6.4182334 -20.62934875 5.77087402 C-17.71350749 4.79163164 -14.79583608 3.81803855 -11.87768555 2.84570312 C-10.58699048 2.41007427 -10.58699048 2.41007427 -9.27022076 1.96564484 C-8.48521096 1.7053524 -7.70020117 1.44505997 -6.8914032 1.17687988 C-6.2083546 0.94827522 -5.525306 0.71967056 -4.82155895 0.48413849 C-3 0 -3 0 0 0 Z" fill="#FFFFFF" transform="translate(259,6)"/>
+      <path d="M0 0 C0 73.26 0 146.52 0 222 C-4.32698316 221.13460337 -7.01529026 220.17750235 -10.87597656 218.24023438 C-12.61237396 217.3742865 -12.61237396 217.3742865 -14.3838501 216.49084473 C-15.63620292 215.85866702 -16.88845896 215.22629758 -18.140625 214.59375 C-19.43122369 213.94692093 -20.72205986 213.30056549 -22.01312256 212.65466309 C-24.71144347 211.30320625 -27.40775667 209.947854 -30.10253906 208.58935547 C-33.56231954 206.84527911 -37.02556695 205.10823063 -40.49014664 203.37371063 C-43.15208329 202.04066821 -45.81287975 200.70536448 -48.47325897 199.36921692 C-49.7505592 198.72771298 -51.02805028 198.0865889 -52.30573273 197.44584656 C-54.0854104 196.55258452 -55.86354642 195.65625298 -57.64160156 194.75976562 C-58.6546637 194.24982056 -59.66772583 193.73987549 -60.71148682 193.21447754 C-63 192 -63 192 -64 191 C-64.09681822 188.93705722 -64.12186923 186.87073958 -64.12025452 184.80552673 C-64.12110894 184.15130393 -64.12196337 183.49708113 -64.12284368 182.82303339 C-64.12450028 180.61498657 -64.11897421 178.40701452 -64.11352539 176.19897461 C-64.11324353 174.62249249 -64.11340123 173.04601024 -64.1139679 171.4695282 C-64.11425592 167.17632451 -64.1083584 162.88314851 -64.10139394 158.58995128 C-64.09516121 154.10827317 -64.09455667 149.62659449 -64.09336853 145.14491272 C-64.09025497 136.65219091 -64.08204126 128.15948191 -64.07201904 119.66676575 C-64.06085866 110.00066461 -64.05534764 100.33456288 -64.05032361 90.66845691 C-64.03985866 70.77896412 -64.02225875 50.88948286 -64 31 C-43.54746027 20.19701279 -43.54746027 20.19701279 -34.0625 15.4296875 C-33.16426514 14.97772003 -32.26603027 14.52575256 -31.34057617 14.06008911 C-29.48995172 13.13014749 -27.63880234 12.20124969 -25.78710938 11.2734375 C-22.94374612 9.84677451 -20.10475363 8.41163059 -17.265625 6.9765625 C-15.44817761 6.06458395 -13.63047915 5.15310554 -11.8125 4.2421875 C-10.54708374 3.60021927 -10.54708374 3.60021927 -9.25610352 2.94528198 C-8.47678467 2.55712311 -7.69746582 2.16896423 -6.89453125 1.76904297 C-6.21237549 1.42614227 -5.53021973 1.08324158 -4.82739258 0.72994995 C-3 0 -3 0 0 0 Z" fill="#FFFFFF" transform="translate(132,6)"/>
+      <path d="M0 0 C0 73.26 0 146.52 0 222 C-14.00008983 214.99995509 -26.77719041 205.92671385 -33 191 C-39.094565 168.15260973 -37.25877039 142.81597967 -36.84157133 119.40288329 C-36.74034472 112.96523272 -36.79326982 106.54167579 -36.93164062 100.10498047 C-38.3635668 31.97999018 -38.3635668 31.97999018 -21.73809814 14.45407104 C-6.49364222 0 -6.49364222 0 0 0 Z" fill="#FFFFFF" transform="translate(37,6)"/>
+    </svg>
+    <div class="logo-text">ФОТОБОТ</div>
+  </a>
+
+  <div class="left-content">
+    <div class="tagline">АВТОВЁРСТКА<br>ВЫПУСКНЫХ АЛЬБОМОВ<br>ДЛЯ ФОТОГРАФОВ</div>
+    <p class="desc">Онлайн-инструмент для быстрой вёрстки выпускных альбомов. Войдите чтобы продолжить работу с заказами.</p>
+    <div class="features-list">
+      <div class="feature-item"><span class="dot"></span>Автовёрстка альбома от 5 минут</div>
+      <div class="feature-item"><span class="dot"></span>60+ готовых шаблонов от дизайнеров</div>
+      <div class="feature-item"><span class="dot"></span>Интеграция с Wfolio</div>
+      <div class="feature-item"><span class="dot"></span>CRM для управления всеми заказами</div>
+      <div class="feature-item"><span class="dot"></span>Выгрузка макетов в типографию</div>
+    </div>
+  </div>
+
+  <div class="left-footer">
+    <a href="https://fottobot.online" target="_blank">О сервисе</a>
+    <a href="https://fottobot.online/price" target="_blank">Стоимость</a>
+    <a href="https://help.fottobot.io" target="_blank">Справочный центр</a>
+    <a href="mailto:hi@fottobot.net">hi@fottobot.net</a>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="login-box">
+
+    <h1>Добро пожаловать</h1>
+    <p class="subtitle">Войдите в аккаунт чтобы продолжить работу.</p>
+
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this, 'login')">Вход</button>
+      <button class="tab" onclick="setTab(this, 'register')">Регистрация</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <div class="input-wrap">
+          <input type="email" placeholder="your@email.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Пароль</label>
+        <div class="input-wrap">
+          <input type="password" id="pwd" placeholder="••••••••" autocomplete="current-password">
+          <button class="eye-btn" onclick="togglePwd('pwd', this)" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="checkbox-wrap">
+          <input type="checkbox">
+          <span>Запомнить меня</span>
+        </label>
+        <a href="#" class="forgot-link">Забыли пароль?</a>
+      </div>
+
+      <button class="btn-primary">ВОЙТИ</button>
+
+      <div class="divider"><span>или</span></div>
+
+      <p class="register-link">Нет аккаунта? <a href="#" onclick="switchToRegister()">Зарегистрироваться бесплатно</a></p>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="register-form" style="display:none;">
+      <div class="form-group">
+        <label>Email</label>
+        <div class="input-wrap">
+          <input type="email" placeholder="your@email.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Имя</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="Иван" autocomplete="given-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Фамилия</label>
+          <div class="input-wrap">
+            <input type="text" placeholder="Иванов" autocomplete="family-name">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Страна</label>
+        <div class="input-wrap">
+          <select class="select-input">
+            <option value="ru">🇷🇺 Россия</option>
+            <option value="by">🇧🇾 Беларусь</option>
+            <option value="kz">🇰🇿 Казахстан</option>
+            <option value="ua">🇺🇦 Украина</option>
+            <option value="other">Другая</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" id="city-group">
+        <label>Город <span style="color:var(--muted);font-size:0.7rem;text-transform:none;font-weight:400;">(можно добавить несколько)</span></label>
+        <div class="city-field" id="city-field" onclick="document.getElementById('city-input').focus()">
+          <span id="city-tags"></span>
+          <input type="text" id="city-input" class="city-text-input" placeholder="Введите новый город">
+          <button class="city-add-btn" onclick="addCity()" type="button">+</button>
+        </div>
+        <div class="error-msg" id="city-error">Добавьте хотя бы один город</div>
+      </div>
+
+      <div class="form-group">
+        <label>Телефон</label>
+        <div class="input-wrap phone-wrap">
+          <span class="phone-prefix">+7</span>
+          <input type="tel" placeholder="(999) 000-00-00" class="phone-input" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Среднее кол-во классов/групп в год</label>
+        <div class="input-wrap">
+          <select class="select-input">
+            <option value="" disabled selected>Выберите диапазон</option>
+            <option value="1-5">1–5 классов</option>
+            <option value="6-10">6–10 классов</option>
+            <option value="11-20">11–20 классов</option>
+            <option value="21-50">21–50 классов</option>
+            <option value="50+">Более 50 классов</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Пароль</label>
+        <div class="input-wrap">
+          <input type="password" id="reg-pwd" placeholder="Минимум 8 символов" autocomplete="new-password">
+          <button class="eye-btn" onclick="togglePwd('reg-pwd', this)" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Повторите пароль</label>
+        <div class="input-wrap">
+          <input type="password" id="reg-pwd2" placeholder="••••••••" autocomplete="new-password">
+          <button class="eye-btn" onclick="togglePwd('reg-pwd2', this)" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-wrap" style="margin-bottom:10px;">
+          <input type="checkbox">
+          <span>Подтверждаю, что ознакомлен(а) с <a href="#" style="color:var(--accent2);text-decoration:none;">Политикой обработки персональных данных</a></span>
+        </label>
+        <label class="checkbox-wrap">
+          <input type="checkbox">
+          <span>Подтверждаю <a href="#" style="color:var(--accent2);text-decoration:none;">согласие на обработку персональных данных</a></span>
+        </label>
+      </div>
+
+      <button class="btn-primary">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+
+      <div class="divider"><span>или</span></div>
+
+      <p class="register-link">Уже есть аккаунт? <a href="#" onclick="switchToLogin()">Войти</a></p>
+    </div>
+
+    <a href="https://help.fottobot.io" class="support-link" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      Нужна помощь? Справочный центр
+    </a>
+
+  </div>
+</div>
+
+<style>
+  .input-wrap input.error,
+  .input-wrap .select-input.error,
+  .input-wrap .phone-input.error {
+    border-color: #ff6b6b !important;
+    box-shadow: 0 0 0 3px rgba(255,107,107,0.15) !important;
+  }
+  .error-msg {
+    color: #ff6b6b;
+    font-size: 0.73rem;
+    margin-top: 5px;
+    display: none;
+  }
+  .error-msg.visible { display: block; }
+</style>
+
+<script>
+  function setTab(btn, type) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+    document.getElementById('register-form').style.display = type === 'register' ? 'block' : 'none';
+  }
+
+  function switchToRegister() {
+    const tabs = document.querySelectorAll('.tab');
+    tabs[0].classList.remove('active');
+    tabs[1].classList.add('active');
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+  }
+
+  function switchToLogin() {
+    const tabs = document.querySelectorAll('.tab');
+    tabs[1].classList.remove('active');
+    tabs[0].classList.add('active');
+    document.getElementById('register-form').style.display = 'none';
+    document.getElementById('login-form').style.display = 'block';
+  }
+
+  function togglePwd(id, btn) {
+    const input = document.getElementById(id);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.innerHTML = isHidden
+      ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+      : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  }
+
+  // Города
+  let cities = [];
+
+  function addCity() {
+    const input = document.getElementById('city-input');
+    const val = input.value.trim();
+    if (!val) return;
+    if (cities.includes(val)) { input.value = ''; return; }
+    cities.push(val);
+    renderCities();
+    input.value = '';
+    setCityError(false);
+  }
+
+  function removeCity(city) {
+    cities = cities.filter(c => c !== city);
+    renderCities();
+  }
+
+  function renderCities() {
+    const container = document.getElementById('city-tags');
+    container.innerHTML = cities.map(c =>
+      `<div class="city-tag">${c}<button class="remove-city" onclick="removeCity('${c}')" type="button">✕</button></div>`
+    ).join('');
+  }
+
+  function setCityError(show) {
+    const field = document.getElementById('city-field');
+    const err = document.getElementById('city-error');
+    if (show) { field.classList.add('error'); err.classList.add('visible'); }
+    else { field.classList.remove('error'); err.classList.remove('visible'); }
+  }
+
+  document.getElementById('city-input').addEventListener('input', function() {
+    setCityError(false);
+  });
+
+  // Enter в поле города = добавить
+  document.getElementById('city-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); addCity(); }
+  });
+
+
+  document.addEventListener('input', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+      e.target.classList.remove('error');
+      const msg = e.target.closest('.form-group')?.querySelector('.error-msg');
+      if (msg) msg.classList.remove('visible');
+    }
+  });
+
+  // Валидация регистрации
+  document.querySelector('#register-form .btn-primary').addEventListener('click', function(e) {
+    e.preventDefault();
+    const form = document.getElementById('register-form');
+    let valid = true;
+
+    // Проверяем город
+    if (cities.length === 0) {
+      setCityError(true);
+      valid = false;
+    }
+
+    // Проверяем все обязательные input (кроме city-input)
+    form.querySelectorAll('input[type="email"], input[type="text"], input[type="tel"], input[type="password"]').forEach(input => {
+      if (input.id === 'city-input') return;
+      if (!input.value.trim()) {
+        input.classList.add('error');
+        valid = false;
+      }
+    });
+
+    // Проверяем select
+    form.querySelectorAll('select').forEach(sel => {
+      if (!sel.value) {
+        sel.classList.add('error');
+        valid = false;
+      }
+    });
+
+    // Проверяем совпадение паролей
+    const pwd1 = document.getElementById('reg-pwd');
+    const pwd2 = document.getElementById('reg-pwd2');
+    if (pwd1.value && pwd2.value && pwd1.value !== pwd2.value) {
+      pwd2.classList.add('error');
+      let msg = pwd2.closest('.form-group').querySelector('.error-msg');
+      if (!msg) {
+        msg = document.createElement('div');
+        msg.className = 'error-msg';
+        msg.textContent = 'Пароли не совпадают';
+        pwd2.closest('.input-wrap').after(msg);
+      }
+      msg.classList.add('visible');
+      valid = false;
+    }
+
+    // Проверяем пароль минимум 6 символов
+    if (pwd1.value && pwd1.value.length < 6) {
+      pwd1.classList.add('error');
+      let msg = pwd1.closest('.form-group').querySelector('.error-msg');
+      if (!msg) {
+        msg = document.createElement('div');
+        msg.className = 'error-msg';
+        msg.textContent = 'Пожалуйста, введите действующий пароль от 6 до 255 символов.';
+        pwd1.closest('.input-wrap').after(msg);
+      }
+      msg.classList.add('visible');
+      valid = false;
+    }
+
+    // Проверяем чекбоксы
+    form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      if (!cb.checked) {
+        cb.style.outline = '2px solid #ff6b6b';
+        valid = false;
+      } else {
+        cb.style.outline = '';
+      }
+    });
+
+    if (valid) {
+      // Здесь передать данные на бэкенд
+      console.log('Форма валидна, отправляем данные');
+    }
+  });
+
+  // Валидация входа
+  document.querySelector('#login-form .btn-primary').addEventListener('click', function(e) {
+    e.preventDefault();
+    const form = document.getElementById('login-form');
+    let valid = true;
+    form.querySelectorAll('input').forEach(input => {
+      if (!input.value.trim()) {
+        input.classList.add('error');
+        valid = false;
+      }
+    });
+    if (valid) {
+      console.log('Вход, отправляем данные');
+    }
+  });
+</script>
+</body>
+</html>
