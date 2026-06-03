@@ -39,7 +39,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 48px;
+    gap: 24px;
     padding: 48px;
     overflow: hidden;
     background: linear-gradient(135deg, #0d1225 0%, #0B1020 60%, #110d20 100%);
@@ -137,7 +137,7 @@
     color: var(--muted);
     line-height: 1.7;
     max-width: 420px;
-    margin-bottom: 40px;
+    margin-bottom: 0;
   }
 
   .features-list {
@@ -222,15 +222,30 @@
     font-family: 'Unbounded', sans-serif;
     font-size: 1.4rem;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     color: var(--text);
   }
 
-  .login-box .subtitle {
+  .subtitle {
     font-size: 0.88rem;
     color: var(--muted);
     margin-bottom: 36px;
     line-height: 1.6;
+    transition: all 0.3s;
+  }
+
+  .subtitle.register-mode {
+    color: var(--text);
+    background: linear-gradient(135deg, rgba(123,97,255,0.15) 0%, rgba(123,97,255,0.05) 100%);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .subtitle.register-mode::before {
+    content: '👋 ';
   }
 
   .tabs {
@@ -879,9 +894,14 @@
     btn.classList.add('active');
     document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
     document.getElementById('register-form').style.display = type === 'register' ? 'block' : 'none';
-    document.getElementById('form-subtitle').textContent = type === 'login'
-      ? 'Войдите в аккаунт чтобы продолжить работу.'
-      : 'Регистрация только для фотографов. Заполните данные.';
+    const sub = document.getElementById('form-subtitle');
+    if (type === 'login') {
+      sub.textContent = 'Войдите в аккаунт чтобы продолжить работу.';
+      sub.classList.remove('register-mode');
+    } else {
+      sub.textContent = 'Регистрация только для фотографов. Заполните данные.';
+      sub.classList.add('register-mode');
+    }
   }
 
   function switchToRegister() {
@@ -890,7 +910,9 @@
     tabs[1].classList.add('active');
     document.getElementById('login-form').style.display = 'none';
     document.getElementById('register-form').style.display = 'block';
-    document.getElementById('form-subtitle').textContent = 'Регистрация только для фотографов. Заполните данные.';
+    const sub = document.getElementById('form-subtitle');
+    sub.textContent = 'Регистрация только для фотографов. Заполните данные.';
+    sub.classList.add('register-mode');
   }
 
   function switchToLogin() {
@@ -899,7 +921,9 @@
     tabs[0].classList.add('active');
     document.getElementById('register-form').style.display = 'none';
     document.getElementById('login-form').style.display = 'block';
-    document.getElementById('form-subtitle').textContent = 'Войдите в аккаунт чтобы продолжить работу.';
+    const sub = document.getElementById('form-subtitle');
+    sub.textContent = 'Войдите в аккаунт чтобы продолжить работу.';
+    sub.classList.remove('register-mode');
   }
 
   function togglePwd(id, btn) {
